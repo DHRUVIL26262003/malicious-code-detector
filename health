@@ -1,0 +1,3 @@
+@app.get("/healthz", response_class=PlainTextResponse)
+async def healthz():
+    return "ok"
