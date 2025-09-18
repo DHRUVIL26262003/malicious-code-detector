@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Malware Detector - Upload</title>
+</head>
+<body>
+  <h1>Malware Detector (Static)</h1>
+  <form id="f" enctype="multipart/form-data" method="post" action="/analyze">
+    <label>Upload file (email/document/image):</label><br>
+    <input type="file" name="file"/><br><br>
+    <label>Or paste raw text:</label><br>
+    <textarea name="raw_text" rows="8" cols="80"></textarea><br><br>
+    <button type="submit">Analyze</button>
+  </form>
+  <pre id="out"></pre>
+  <script>
+    const form = document.getElementById('f');
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const res = await fetch('/analyze', { method: 'POST', body: data });
+      const json = await res.json();
+      document.getElementById('out').textContent = JSON.stringify(json, null, 2);
+    });
+  </script>
+</body>
+</html>
