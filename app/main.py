@@ -1,12 +1,24 @@
-from fastapi import FastAPI, Form, UploadFile, File, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+import io
+from fastapi import FastAPI, Form, UploadFile, File
+from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
+from pdfminer.high_level import extract_text as pdf_extract_text
 
 from .analyzer import analyze
 
 app = FastAPI(title="Malware Detector (Static)")
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+# Health endpoints
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
+@app.head("/")
+async def head_root():
+    # Render sometimes sends HEAD / during startup checks
+    return PlainTextResponse("", status_code=200)
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
